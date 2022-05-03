@@ -13,14 +13,27 @@ const chalk = require('chalk');
 /*
   SCAFFOLDING SCRIPT
 */
-const componentName = process.argv[2];
+let componentPath = process.argv[2];
+let componentName = componentPath.split('/').pop();
+
+if (!componentPath.includes('/')) {
+  throw `Please pass a path for the new component. The path should be relative to the src/components folder.
+For example: jss scaffold mysubfolder/MyComponentName.  This will create a new MyComponentName component in the folder 
+src/components/mysubfolder`;
+}
 
 if (!componentName) {
-  throw 'Component name was not passed. Usage: jss scaffold <ComponentName>';
+  throw 'Component name was not passed.';
 }
 
 if (!/^[A-Z][A-Za-z0-9-]+$/.test(componentName)) {
-  throw 'Component name should start with an uppercase letter and contain only letters and numbers.';
+  throw `Component name should start with an uppercase letter and contain only letters and numbers. 
+  Do not include the file extension (i.e. ".js" or ".jsx). Ex: jss scaffold mysubfolder/MyComponentName`;
+}
+
+if (componentPath.includes('C:/')) {
+  throw `Path should not begin with a special character (such as "/" or "\"). To scaffold a new component the 
+  command should look like this: jss scaffold mysubfolder/MyComponentName`;
 }
 
 const componentManifestDefinitionsPath = 'sitecore/definitions/components';
@@ -63,12 +76,21 @@ if (manifestOutputPath) {
       'jss deploy:watch'
     )} or ${chalk.green('jss deploy files')})`
   );
-  console.log(`* Add the component to a route using Sitecore Experience Editor, and test it.`);
+  console.log('* Add the component to a route using Sitecore Experience Editor, and test it.');
 }
 
 /*
   TEMPLATING FUNCTIONS
 */
+
+/**
+ * Force to use `crlf` line endings, we are using `crlf` across the project.
+ * Replace: `lf` (\n), `cr` (\r)
+ * @param {string} content
+ */
+function editLineEndings(content) {
+  return content.replace(/\r|\n/gm, '\r\n');
+}
 
 function scaffoldComponent() {
   const exportVarName = componentName.replace(/[^\w]+/g, '');
@@ -86,7 +108,12 @@ const ${exportVarName} = (props) => (
 export default ${exportVarName};
 `;
 
-  const outputDirectoryPath = path.join(componentRootPath, componentName);
+  const outputDirectoryPath = path.join(componentRootPath, componentPath);
+  const subFolderPath = outputDirectoryPath.split('\\').slice(0, -1).join('\\');
+
+  if (!fs.existsSync(subFolderPath)) {
+    fs.mkdirSync(subFolderPath);
+  }
 
   if (fs.existsSync(outputDirectoryPath)) {
     throw `Component path ${outputDirectoryPath} already existed. Not creating component.`;
@@ -96,7 +123,7 @@ export default ${exportVarName};
 
   const outputFilePath = path.join(outputDirectoryPath, 'index.js');
 
-  fs.writeFileSync(outputFilePath, componentTemplate, 'utf8');
+  fs.writeFileSync(outputFilePath, editLineEndings(componentTemplate), 'utf8');
 
   return outputFilePath;
 }
@@ -110,13 +137,11 @@ import { CommonFieldTypes, SitecoreIcon, Manifest } from '@sitecore-jss/sitecore
  * This function is invoked by convention (*.sitecore.js) when 'jss manifest' is run.
  * @param {Manifest} manifest Manifest instance to add components to
  */
-export default function(manifest) {
+export default function (manifest) {
   manifest.addComponent({
     name: '${componentName}',
     icon: SitecoreIcon.DocumentTag,
-    fields: [
-      { name: 'heading', type: CommonFieldTypes.SingleLineText },
-    ],
+    fields: [{ name: 'heading', type: CommonFieldTypes.SingleLineText }],
     /*
     If the component implementation uses <Placeholder> or withPlaceholder to expose a placeholder,
     register it here, or components added to that placeholder will not be returned by Sitecore:
@@ -128,14 +153,23 @@ export default function(manifest) {
 
   const outputFilePath = path.join(
     componentManifestDefinitionsPath,
-    `${componentName}.sitecore.js`
+    `${componentPath}.sitecore.js`
   );
+
+  const componentPathArray = componentPath.split('/');
+  const componentDirectory = componentPathArray.slice(0, -1).join('/');
+  const manifestDirectoryPath = path.join(componentManifestDefinitionsPath, componentDirectory);
+
+  if (!fs.existsSync(manifestDirectoryPath)) {
+    fs.mkdirSync(manifestDirectoryPath);
+  }
 
   if (fs.existsSync(outputFilePath)) {
     throw `Manifest definition path ${outputFilePath} already exists. Not creating manifest definition.`;
   }
 
-  fs.writeFileSync(outputFilePath, manifestTemplate, 'utf8');
+  console.log('writing file ' + outputFilePath);
+  fs.writeFileSync(outputFilePath, editLineEndings(manifestTemplate), 'utf8');
 
   return outputFilePath;
 }

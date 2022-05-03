@@ -1,6 +1,6 @@
 import React from 'react';
 import { DateField } from '@sitecore-jss/sitecore-jss-react';
-import StyleguideSpecimen from '../Styleguide-Specimen';
+import StyleguideSpecimen from '../../Styleguide-Specimen';
 
 /**
  * Demonstrates usage of date and time content field types within JSS.
