@@ -80,23 +80,15 @@ function generateComponentFactory() {
           if (fs.statSync(itemPath).isDirectory()) {
             return searchSubFolder(subFolderItemPath);
           } else {
-            // remove me
-            console.log('item: ' + item);
             if (item === 'index.js') {
-              console.log('registering component in first block: ' + subFolderItemPath);
               registerComponent(`${subFolderItemPath}\\index.js`);
             }
           }
         });
       } else {
-        console.log('registering component in else: ' + subFolderItemPath);
+        const isIndexJSFile = subFolderItemPath.split('\\').slice(-1)[0] === 'index.js';
 
-        const splitThing = subFolderItemPath.split('.');
-        // remove me
-        console.log('splitThing: ' + splitThing);
-        const isJSFile = subFolderItemPath.split('.').slice(-1)[0] === 'js';
-
-        if (isJSFile) {
+        if (isIndexJSFile) {
           registerComponent(subFolderItemPath);
         }
       }
@@ -104,10 +96,6 @@ function generateComponentFactory() {
 
     function registerComponent(itemPath) {
       const pathArray = itemPath.split('\\');
-      // remove me
-      // console.log(pathArray);
-      console.log('itemPath: ' + itemPath);
-
       const importVarName = pathArray[pathArray.length - 2].replace(/[^\w]+/g, '');
 
       // remove "src" from the path and replace backslash with forward slash
@@ -116,7 +104,7 @@ function generateComponentFactory() {
         .filter((str) => str !== 'src')
         .join('/');
 
-      // console.debug(`Registering JSS component ${relativePath}`);
+      console.debug(`Registering JSS component ${relativePath}`);
       imports.push(`import ${importVarName} from '../${relativePath}';`);
       registrations.push(`components.set('${importVarName}', ${importVarName});`);
     }

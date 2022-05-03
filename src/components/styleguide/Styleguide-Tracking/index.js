@@ -1,8 +1,8 @@
 import React from 'react';
 import { withSitecoreContext } from '@sitecore-jss/sitecore-jss-react';
 import { trackingApi } from '@sitecore-jss/sitecore-jss-tracking';
-import { dataFetcher } from '../../dataFetcher';
-import config from '../../temp/config';
+import { dataFetcher } from '../../..//dataFetcher';
+import config from '../../../temp/config';
 import StyleguideSpecimen from '../Styleguide-Specimen';
 
 /* eslint-disable no-alert,no-undef */
@@ -118,7 +118,11 @@ class StyleguideTracking extends React.Component {
         {!disconnectedMode && (
           <div>
             <p className="alert alert-warning">
-              Note: The JSS tracker API is disabled by default. Consult the <a href="https://jss.sitecore.com/docs/fundamentals/services/tracking">tracking documentation</a> to enable it.
+              Note: The JSS tracker API is disabled by default. Consult the{' '}
+              <a href="https://jss.sitecore.com/docs/fundamentals/services/tracking">
+                tracking documentation
+              </a>{' '}
+              to enable it.
             </p>
             <div className="row">
               <fieldset className="form-group col-sm">
