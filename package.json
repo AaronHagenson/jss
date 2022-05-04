@@ -6,7 +6,9 @@
   "config": {
     "appName": "localjss",
     "rootPlaceholders": [
-      "jss-main"
+      "jss-main",
+      "account-header", 
+      "account-footer"
     ],
     "sitecoreDistPath": "/dist/localjss",
     "sitecoreConfigPath": "/App_Config/Include/zzz",
