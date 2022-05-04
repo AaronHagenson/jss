@@ -58,28 +58,37 @@ module.exports = {
       // configure CSS Modules for .css files
       {
         test: /\.css$/,
-        loader:
-          'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+        use: {
+          loader:
+            'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+        },
       },
       // configures CSS Modues for SASS files
       {
         test: /\.(scss|sass)?$/,
         exclude: /node_modules/,
-        use: {
-          loaders: [
-            require.resolve('style-loader', { modules: true }),
-            require.resolve('css-loader'),
-            require.resolve('sass-loader'),
-          ],
-        },
+        use: [
+          {
+            loader: require.resolve('style-loader'),
+            options: {
+              modules: true,
+            },
+          },
+          {
+            loader: require.resolve('css-loader'),
+          },
+          {
+            loader: require.resolve('sass-loader'),
+          },
+        ],
       },
       {
         exclude: [/\.(?!js|ts|mjs|jsx|tsx|html|graphql$)[^.]+$/, /\.html$/, /\.json$/, /\.scss$/],
         use: {
-          loaders: [require.resolve('file-loader')],
-        },
-        options: {
-          name: 'static/media/[name].[hash:8].[ext]',
+          loader: require.resolve('file-loader'),
+          options: {
+            name: 'static/media/[name].[hash:8].[ext]',
+          },
         },
       },
     ],

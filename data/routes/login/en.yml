@@ -8,10 +8,10 @@ placeholders:
         subTextHeading: Don't have a LegrandAV.com account?
         subText: We have several options available for you to gain access. Follow the link to learn more.
         forgotPasswordLink: 
-          href: /styleguide
+          href: /
           text: Forgot Password?
         createAccountLink: 
-          href: /styleguide
+          href: /
           text: Create an account
   account-header:
     - componentName: AccountHeader
