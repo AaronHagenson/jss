@@ -1,0 +1,27 @@
+fields:
+  pageTitle: My Account
+placeholders:
+  jss-main:
+    - componentName: Login  
+      fields: 
+        heading: Sign in to Legrand | AV
+        subTextHeading: Don't have a LegrandAV.com account?
+        subText: We have several options available for you to gain access. Follow the link to learn more.
+        forgotPasswordLink: 
+          href: /styleguide
+          text: Forgot Password?
+        createAccountLink: 
+          href: /styleguide
+          text: Create an account
+  account-header:
+    - componentName: AccountHeader
+      fields:
+        logo: 
+          src: /data/media/img/legrandav-logo.svg
+          alt: LegrandAv Logo
+        backArrowIcon: 
+          src: /data/media/img/chevron_left.svg
+  account-footer:
+    - componentName: AccountFooter
+      fields:
+        heading: footer test

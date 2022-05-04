@@ -2,11 +2,13 @@ import React from 'react';
 import { Placeholder, VisitorIdentification } from '@sitecore-jss/sitecore-jss-react';
 import { NavLink } from 'react-router-dom';
 import { withTranslation } from 'react-i18next';
+import deepEqual from 'deep-equal';
 import Helmet from 'react-helmet';
 
-// Using bootstrap is completely optional. It's used here to provide a clean layout for samples,
-// without needing extra CSS in the sample app. Remove it in package.json as well if it's removed here.
-import './assets/app.module.scss';
+// import CSS reset and global styles
+import reset from './assets/reset.module.scss';
+import appStyles from './assets/app.module.scss';
+
 import logo from './assets/sc_logo.svg';
 
 /*
@@ -29,7 +31,7 @@ let Navigation = ({ t, i18n }) => (
     <nav className="my-2 my-md-0 mr-md-3">
       <a
         className="p-2 text-dark"
-        href="https://jss.sitecore.net"
+        href="https://jss.sitecore.com"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -42,6 +44,8 @@ let Navigation = ({ t, i18n }) => (
         {t('GraphQL')}
       </NavLink>
     </nav>
+
+    {/* <div className={appStyles.thingy}>Test thingy</div> */}
   </div>
 );
 
@@ -57,6 +61,7 @@ const Layout = ({ route }) => (
       <title>
         {(route.fields && route.fields.pageTitle && route.fields.pageTitle.value) || 'Page'}
       </title>
+      <link rel="stylesheet" href="https://use.typekit.net/awy7nwh.css" />
     </Helmet>
 
     {/*
@@ -66,15 +71,23 @@ const Layout = ({ route }) => (
 
       VI detection only runs once for a given analytics ID, so this is not a recurring operation once cookies are established.
     */}
-    <VisitorIdentification />
+    {/* <VisitorIdentification /> */}
 
-    <Navigation />
+    {/* <Navigation /> */}
 
     {/* root placeholder for the app, which we add components to using route data */}
-    <div className="container">
+    <div className={'appContainer'}>
+      <Placeholder name="account-header" rendering={route} />
       <Placeholder name="jss-main" rendering={route} />
+      <Placeholder name="account-footer" rendering={route} />
     </div>
   </React.Fragment>
 );
 
-export default Layout;
+const propsAreEqual = (prevProps, nextProps) => {
+  if (deepEqual(prevProps.route, nextProps.route)) return true;
+
+  return false;
+};
+
+export default React.memo(Layout, propsAreEqual);
