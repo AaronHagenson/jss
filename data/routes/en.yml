@@ -59,6 +59,3 @@ placeholders:
               <li>Delete <code>/data/dictionary/*.yml</code></li>
             </ol>
           </div>
-    - componentName: NestedComponent
-      fields: 
-        heading: I am a nested component
